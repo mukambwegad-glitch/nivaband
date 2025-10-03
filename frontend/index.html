@@ -1,40 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NivaBand AI Composer</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NivaBand</title>
 </head>
 <body>
-  <div class="container">
-    <h1>🎵 NivaBand AI Composer</h1>
-    <p>Create cinematic, powerful, and original AI-generated music</p>
+  <h1>NivaBand 🎶</h1>
+  <form id="music-form">
+    <label>Genre: <input type="text" name="genre" required /></label><br />
+    <label>Mood: <input type="text" name="mood" required /></label><br />
+    <label>Instruments: <input type="text" name="instruments" /></label><br />
+    <label>BPM: <input type="number" name="bpm" value="120" /></label><br />
+    <label>Duration: <input type="number" name="duration" value="30" /></label><br />
+    <label>Notes: <input type="text" name="notes" /></label><br />
+    <button type="submit">Generate</button>
+  </form>
 
-    <form id="musicForm">
-      <label>Genre</label>
-      <input type="text" name="genre" value="Electronic">
+  <div id="output"></div>
 
-      <label>Mood</label>
-      <input type="text" name="mood" value="Energetic">
-
-      <label>Instruments</label>
-      <input type="text" name="instruments" placeholder="e.g. synths, guitar, tribal drums">
-
-      <label>BPM</label>
-      <input type="number" name="bpm" value="120">
-
-      <label>Duration (seconds)</label>
-      <input type="number" name="duration" value="30">
-
-      <label>Extra Notes</label>
-      <textarea name="notes" placeholder="Describe melody, chords, textures..."></textarea>
-
-      <button type="submit">🎶 Generate Music</button>
-    </form>
-
-    <div id="output"></div>
-  </div>
   <script src="script.js"></script>
 </body>
 </html>
