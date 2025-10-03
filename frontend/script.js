@@ -1,15 +1,20 @@
-document.getElementById("musicForm").addEventListener("submit", async (e) => {
+document.getElementById("music-form").addEventListener("submit", async (e) => {
   e.preventDefault();
-  
-  const formData = new FormData(e.target);
-  const response = await fetch("https://your-backend.onrender.com/generate", {
+
+  const form = e.target;
+  const formData = new FormData(form);
+
+  const response = await fetch("https://nivaband-z8x2.onrender.com/generate", {
     method: "POST",
-    body: formData
+    body: formData,
   });
 
-  const result = await response.json();
-  document.getElementById("output").innerHTML = `
-    <h3>Generated Track:</h3>
-    <audio controls src="${result.url}"></audio>
-  `;
+  const data = await response.json();
+  const outputDiv = document.getElementById("output");
+
+  if (data.url) {
+    outputDiv.innerHTML = `<p>Generated Music:</p><audio controls src="${data.url}"></audio>`;
+  } else {
+    outputDiv.innerHTML = `<p>Error generating music</p>`;
+  }
 });
