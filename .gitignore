@@ -1,40 +1,17 @@
-# Python cache & compiled files
+# Python
 __pycache__/
-*.py[cod]
+*.pyc
 *.pyo
-*.so
-
-# Virtual environment
-.venv/
-env/
+*.pyd
+.env
+.venv
 venv/
 
-# OS files
-.DS_Store
-Thumbs.db
-
-# Logs & temp
+# Logs
 *.log
-*.tmp
-*.swp
-*.swo
 
-# Jupyter / Notebooks
-.ipynb_checkpoints/
+# OS
+.DS_Store
 
-# Hugging Face cache (can be big!)
-/huggingface/
-.cache/
-transformers_cache/
-
-# VS Code / IDE
-.vscode/
-.idea/
-
-# Audio outputs
-*.wav
-*.mp3
-
-# Local datasets or large files
-data/
-downloads/
+# Vercel/Render
+.vercel
