@@ -1,0 +1,19 @@
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(120deg, #f6f9fc, #e9efff);
+  color: #333;
+  text-align: center;
+}
+
+header {
+  padding: 30px;
+  background: #6a5acd;
+  color: white;
+}
+
+iframe {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
