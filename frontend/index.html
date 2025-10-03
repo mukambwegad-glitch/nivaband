@@ -1,16 +1,39 @@
-nivaband/
-│
-├── app.py               # Main backend (Gradio + Replicate)
-├── requirements.txt     # Python dependencies
-├── theme.css            # Custom Gradio styling
-├── README.md            # Project description
-├── LICENSE              # MIT License
-├── .gitignore           # Ignore unnecessary files
-│
-├── assets/              # Images, previews, logos
-│   └── niva8-preview.png
-│
-└── frontend/            # Optional custom website
-    ├── index.html
-    ├── style.css
-    └── script.js
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NivaBand — AI Music Composer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🎵 NivaBand — AI Music Composer</h1>
+
+    <label>Genre</label>
+    <input type="text" id="genre" placeholder="Rock, EDM, Jazz...">
+
+    <label>Mood / Emotion</label>
+    <input type="text" id="mood" placeholder="Energetic, Peaceful...">
+
+    <label>Instruments</label>
+    <input type="text" id="instruments" placeholder="Guitar, Synth, Drums...">
+
+    <label>Tempo (BPM)</label>
+    <input type="number" id="bpm" value="120" min="60" max="180">
+
+    <label>Duration</label>
+    <select id="duration">
+      <option value="5">5 sec</option>
+      <option value="15" selected>15 sec</option>
+      <option value="30">30 sec</option>
+    </select>
+
+    <button onclick="generateMusic()">🎶 Generate</button>
+
+    <h2>Output</h2>
+    <audio id="output" controls></audio>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
