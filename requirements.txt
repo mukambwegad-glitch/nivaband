@@ -1,2 +1,2 @@
-gradio
-replicate
+gradio==4.29.0
+replicate==0.15.7
