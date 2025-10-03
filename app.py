@@ -2,29 +2,38 @@ import os
 import gradio as gr
 import replicate
 
-def generate_music(prompt, genre, mood, instruments, tempo, chords, duration):
-    final_prompt = f"{genre} {mood} with {instruments}, tempo {tempo} BPM, chords: {chords}. {prompt}"
+# Load API token from environment
+REPLICATE_API_TOKEN = os.getenv("REPLICATE_API_TOKEN")
+
+def generate_music(genre, mood, instruments, bpm, duration):
+    # Build a smarter prompt
+    prompt = f"{genre} music, {mood}, featuring {instruments}, {bpm} BPM"
+    
     output = replicate.run(
         "facebook/musicgen:latest",
-        input={"prompt": final_prompt, "duration": duration}
+        input={
+            "prompt": prompt,
+            "duration": duration
+        }
     )
     return output
 
-iface = gr.Interface(
-    fn=generate_music,
-    inputs=[
-        gr.Textbox(label="Your Music Idea"),
-        gr.Radio(["Cinematic", "Lo-Fi", "Energetic", "Peaceful", "Mysterious"], label="Mood"),
-        gr.Dropdown(["Piano", "Guitar", "Synth", "Drums"], label="Instruments"),
-        gr.Slider(60, 200, value=90, step=1, label="Tempo BPM"),
-        gr.Textbox(label="Optional Chords/Melody"),
-        gr.Radio([5, 15, 30], label="Duration (sec)", value=15),
-    ],
-    outputs="audio",
-    title="🎧 NivaBand — AI Music Composer"
-)
+with gr.Blocks(css="theme.css") as demo:
+    gr.Markdown("# 🎵 NivaBand — AI Music Composer")
 
-# 🔑 Render fix: bind to the right port
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 7860))
-    iface.launch(server_name="0.0.0.0", server_port=port)
+    genre = gr.Textbox(label="Genre", placeholder="Rock, Jazz, EDM...")
+    mood = gr.Textbox(label="Mood/Emotion", placeholder="Energetic, Calm...")
+    instruments = gr.Textbox(label="Instruments", placeholder="Guitar, Drums, Synth...")
+    bpm = gr.Slider(60, 180, value=120, label="Tempo (BPM)")
+    duration = gr.Radio([5, 15, 30], value=15, label="Duration (seconds)")
+
+    generate_btn = gr.Button("🎶 Generate Music")
+    output_audio = gr.Audio(label="Output Track")
+
+    def process(genre, mood, instruments, bpm, duration):
+        return generate_music(genre, mood, instruments, bpm, duration)
+
+    generate_btn.click(process, inputs=[genre, mood, instruments, bpm, duration], outputs=output_audio)
+
+# ✅ Needed for Render (gunicorn looks for 'app')
+app = demo
