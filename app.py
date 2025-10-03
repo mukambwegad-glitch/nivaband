@@ -5,8 +5,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
-# Load Replicate API token
-os.environ["REPLICATE_API_TOKEN"] = os.getenv("REPLICATE_API_TOKEN")
+# Initialize Replicate client with API token from environment
+replicate_client = replicate.Client(api_token=os.environ["REPLICATE_API_TOKEN"])
 
 # FastAPI app
 app = FastAPI()
@@ -14,7 +14,7 @@ app = FastAPI()
 # Allow frontend requests
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Later replace "*" with your Vercel domain
+    allow_origins=["*"],  # Replace "*" with your Vercel domain later
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -22,10 +22,12 @@ app.add_middleware(
 
 # Music generator
 def generate_music(genre, mood, instruments, bpm, duration, extra_notes=""):
-    prompt = f"{genre} music, {mood} mood, with {instruments}, {bpm} BPM. {extra_notes}"
+    # Build a detailed music prompt
+    prompt = f"""{genre} music with {instruments}, {bpm} BPM, {mood} mood.
+    {extra_notes}"""
     print(f"🎵 Final Prompt: {prompt}")
 
-    output = replicate.run(
+    output = replicate_client.run(
         "facebook/musicgen:latest",
         input={
             "prompt": prompt,
@@ -47,7 +49,7 @@ async def generate_api(data: dict):
     audio_url = generate_music(genre, mood, instruments, bpm, duration, extra_notes)
     return {"audio_url": audio_url}
 
-# Gradio (for testing/debugging)
+# Gradio UI (for testing/debugging)
 def gradio_ui(genre, mood, instruments, bpm, duration, extra_notes):
     return generate_music(genre, mood, instruments, bpm, duration, extra_notes)
 
