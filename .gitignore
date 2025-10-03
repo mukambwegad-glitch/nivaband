@@ -3,6 +3,8 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+
+# Virtual environments
 .env
 .venv
 venv/
@@ -10,8 +12,14 @@ venv/
 # Logs
 *.log
 
-# OS
+# OS junk
 .DS_Store
 
-# Vercel/Render
+# Node / Frontend
+node_modules/
+dist/
+build/
+
+# Vercel / Render
 .vercel
+.render
