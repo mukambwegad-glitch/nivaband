@@ -2,49 +2,57 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>NivaBand — AI Composer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NivaBand AI Composer</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>🎵 NivaBand — AI Music Composer</h1>
-  <form id="musicForm">
-    <label>Genre:</label>
-    <select id="genre">
-      <option>Electronic</option>
-      <option>Hip hop</option>
-      <option>Jazz</option>
-      <option>Rock</option>
-    </select>
+  <div class="container">
+    <h1>🎵 NivaBand AI Composer</h1>
+    <p class="subtitle">Create cinematic, powerful, and original AI-generated music</p>
 
-    <label>Mood:</label>
-    <select id="mood">
-      <option>Energetic</option>
-      <option>Peaceful</option>
-      <option>Mysterious</option>
-      <option>Happy</option>
-    </select>
+    <form id="musicForm">
+      <label>Genre</label>
+      <select id="genre">
+        <option>Electronic</option>
+        <option>Hip hop</option>
+        <option>Jazz</option>
+        <option>Rock</option>
+      </select>
 
-    <label>Instruments:</label>
-    <input type="text" id="instruments" placeholder="guitar, piano, synth">
+      <label>Mood</label>
+      <select id="mood">
+        <option>Energetic</option>
+        <option>Peaceful</option>
+        <option>Mysterious</option>
+        <option>Happy</option>
+      </select>
 
-    <label>BPM:</label>
-    <input type="number" id="bpm" value="120" min="60" max="200">
+      <label>Instruments</label>
+      <input type="text" id="instruments" placeholder="e.g. synths, guitar, tribal drums">
 
-    <label>Duration (sec):</label>
-    <select id="duration">
-      <option value="5">5</option>
-      <option value="15" selected>15</option>
-      <option value="30">30</option>
-    </select>
+      <label>BPM</label>
+      <input type="number" id="bpm" value="120" min="60" max="180">
 
-    <label>Extra Notes:</label>
-    <textarea id="extra_notes" placeholder="chords, emotions, details..."></textarea>
+      <label>Duration (seconds)</label>
+      <select id="duration">
+        <option value="5">5</option>
+        <option value="15" selected>15</option>
+        <option value="30">30</option>
+      </select>
 
-    <button type="submit">Generate 🎶</button>
-  </form>
+      <label>Extra Notes (optional)</label>
+      <textarea id="extra_notes" placeholder="Describe melody, chords, textures..."></textarea>
 
-  <h2>Output:</h2>
-  <audio id="outputAudio" controls></audio>
+      <button type="submit">🎶 Generate Music</button>
+    </form>
+
+    <div id="loading" class="hidden">⏳ Generating your track...</div>
+    <div id="result" class="hidden">
+      <h2>🎧 Your Track</h2>
+      <audio controls id="audioPlayer"></audio>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
