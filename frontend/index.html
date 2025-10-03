@@ -1,12 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>NivaBand</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NivaBand — AI Music Composer</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>🎧 Welcome to NivaBand</h1>
-  <p>Create infinite AI music — powered by Replicate + Gradio</p>
-  <a href="https://nivaband.onrender.com" target="_blank" class="btn">Launch App</a>
+  <div class="container">
+    <h1>🎧 NivaBand</h1>
+    <p class="subtitle">AI Music Generator with Chord Intelligence</p>
+
+    <!-- Prompt Input -->
+    <textarea id="prompt" placeholder="Describe your music idea here..."></textarea>
+
+    <!-- Duration -->
+    <label for="duration">Duration (seconds):</label>
+    <input type="number" id="duration" min="5" max="300" value="60" />
+
+    <!-- Generate Button -->
+    <button id="generate">🎶 Generate Music</button>
+
+    <!-- Output -->
+    <div class="output">
+      <h2>Output Track</h2>
+      <audio id="output-audio" controls></audio>
+    </div>
+
+    <!-- Final Prompt -->
+    <div class="prompt-box">
+      <h3>🔍 Final Prompt</h3>
+      <p id="final-prompt"></p>
+    </div>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
