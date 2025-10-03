@@ -1,35 +1,26 @@
-const API_URL = "https://nivaband.onrender.com"; // Your Render backend
+document.getElementById("generateBtn").addEventListener("click", async () => {
+    const prompt = document.getElementById("promptInput").value;
+    const duration = document.getElementById("durationSelect").value;
 
-document.getElementById("generate").addEventListener("click", async () => {
-  const prompt = document.getElementById("prompt").value;
-  const duration = document.getElementById("duration").value;
-  const outputAudio = document.getElementById("output-audio");
-  const finalPrompt = document.getElementById("final-prompt");
-
-  if (!prompt) {
-    alert("Please enter a music idea!");
-    return;
-  }
-
-  finalPrompt.textContent = `${prompt} | Duration: ${duration}s`;
-
-  try {
-    const response = await fetch(`${API_URL}/predict`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt, duration: parseInt(duration) })
+    const response = await fetch("https://nivaband.onrender.com/predict", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            prompt: prompt,
+            duration: parseInt(duration)
+        })
     });
 
-    const data = await response.json();
-    if (data && data.output) {
-      outputAudio.src = data.output;
-      outputAudio.load();
-      outputAudio.play();
+    const result = await response.json();
+
+    if (result.status === "success") {
+        const audioPlayer = document.getElementById("outputTrack");
+        audioPlayer.src = result.audio_url;
+        audioPlayer.style.display = "block";
+        audioPlayer.play();
     } else {
-      alert("Something went wrong. Try again.");
+        alert("Error: " + result.message);
     }
-  } catch (err) {
-    console.error(err);
-    alert("Error connecting to backend.");
-  }
 });
