@@ -1,6 +1,6 @@
-fastapi
-uvicorn
+gradio
 transformers
-torch
 scipy
+torch
 music21
+uuid
