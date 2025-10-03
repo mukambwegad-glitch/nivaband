@@ -15,3 +15,8 @@ venv/
 
 # Vercel/Render
 .vercel
+
+# Frontend
+node_modules/
+dist/
+build/
