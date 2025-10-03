@@ -1,16 +1,27 @@
 # 🎵 NivaBand — AI Music Composer
 
-NivaBand is an AI-powered music generator that creates unique tracks from your text prompts.
+Generate **AI-powered songs** with just a few words.  
+Built with **FastAPI + Gradio + Replicate + Vercel frontend**.
 
-## 🚀 Features
-- Generate music from prompts like: **Genre + Mood + Instruments + BPM**
-- Adjustable duration (5, 15, 30s)
-- Web UI built with **Gradio**
-- Deployable on **Render** (backend) and **Vercel** (frontend)
+---
 
-## 🛠️ Installation
+## 🚀 How It Works
+1. Enter genre, mood, instruments, BPM, and notes.
+2. Backend builds a structured music prompt.
+3. Replicate’s MusicGen generates audio.
+4. Audio is played in-browser.
 
-```bash
-git clone https://github.com/<your-username>/nivaband.git
-cd nivaband
-pip install -r requirements.txt
+---
+
+## 🛠️ Tech Stack
+- **FastAPI** backend (Render)
+- **Replicate API** for music generation
+- **Gradio** (test UI)
+- **Vercel** frontend (HTML, CSS, JS)
+
+---
+
+## 🌐 Live Demo
+👉 [nivaband.vercel.app](https://nivaband.vercel.app)
+
+---
