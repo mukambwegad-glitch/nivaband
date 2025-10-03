@@ -1,16 +1,16 @@
-# 🎧 NivaBand — AI Music Composer (Pro Mode)
+# 🎵 NivaBand — AI Music Composer
 
-Create infinite AI music using Replicate’s MusicGen + Gradio.
+NivaBand is an AI-powered music generator that creates unique tracks from your text prompts.
 
 ## 🚀 Features
-- Unlimited prompt creativity (Genre + Mood + Instruments + Style + Chords)
-- Flexible duration slider (5 sec → 300 sec)
-- Minimal, distraction-free UI
-- Free hosting on Render (backend) + Vercel (frontend)
+- Generate music from prompts like: **Genre + Mood + Instruments + BPM**
+- Adjustable duration (5, 15, 30s)
+- Web UI built with **Gradio**
+- Deployable on **Render** (backend) and **Vercel** (frontend)
 
-## 🔑 Setup
+## 🛠️ Installation
 
-1. Clone repo:
-   ```bash
-   git clone https://github.com/<your-username>/nivaband.git
-   cd nivaband
+```bash
+git clone https://github.com/<your-username>/nivaband.git
+cd nivaband
+pip install -r requirements.txt
