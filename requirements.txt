@@ -1,6 +1,2 @@
 gradio
-transformers
-scipy
-torch
-music21
-uuid
+replicate
