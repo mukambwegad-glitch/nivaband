@@ -9,51 +9,32 @@
 <body>
   <div class="container">
     <h1>🎵 NivaBand AI Composer</h1>
-    <p class="subtitle">Create cinematic, powerful, and original AI-generated music</p>
+    <p>Create cinematic, powerful, and original AI-generated music</p>
 
     <form id="musicForm">
       <label>Genre</label>
-      <select id="genre">
-        <option>Electronic</option>
-        <option>Hip hop</option>
-        <option>Jazz</option>
-        <option>Rock</option>
-      </select>
+      <input type="text" name="genre" value="Electronic">
 
       <label>Mood</label>
-      <select id="mood">
-        <option>Energetic</option>
-        <option>Peaceful</option>
-        <option>Mysterious</option>
-        <option>Happy</option>
-      </select>
+      <input type="text" name="mood" value="Energetic">
 
       <label>Instruments</label>
-      <input type="text" id="instruments" placeholder="e.g. synths, guitar, tribal drums">
+      <input type="text" name="instruments" placeholder="e.g. synths, guitar, tribal drums">
 
       <label>BPM</label>
-      <input type="number" id="bpm" value="120" min="60" max="180">
+      <input type="number" name="bpm" value="120">
 
       <label>Duration (seconds)</label>
-      <select id="duration">
-        <option value="5">5</option>
-        <option value="15" selected>15</option>
-        <option value="30">30</option>
-      </select>
+      <input type="number" name="duration" value="30">
 
-      <label>Extra Notes (optional)</label>
-      <textarea id="extra_notes" placeholder="Describe melody, chords, textures..."></textarea>
+      <label>Extra Notes</label>
+      <textarea name="notes" placeholder="Describe melody, chords, textures..."></textarea>
 
       <button type="submit">🎶 Generate Music</button>
     </form>
 
-    <div id="loading" class="hidden">⏳ Generating your track...</div>
-    <div id="result" class="hidden">
-      <h2>🎧 Your Track</h2>
-      <audio controls id="audioPlayer"></audio>
-    </div>
+    <div id="output"></div>
   </div>
-
   <script src="script.js"></script>
 </body>
 </html>
