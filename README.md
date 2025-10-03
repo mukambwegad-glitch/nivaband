@@ -1,21 +1,25 @@
 # 🎵 NivaBand — AI Music Composer
 
-NivaBand is an AI-powered music generator that composes **cinematic, emotional, and genre-rich tracks**.  
-Users can choose **genre, mood, instruments, BPM, and extra notes** to create **original AI music** in seconds.  
-
----
+NivaBand is an AI-powered music generator that creates original compositions
+based on genre, mood, instruments, BPM, and extra notes.
 
 ## 🚀 How It Works
-1. **Frontend (Vercel)** → Users interact with a clean UI to select genre, mood, and musical details.  
-2. **Backend (Render)** → A **FastAPI server** connects to **Replicate’s MusicGen model**.  
-3. **Replicate API** → Generates a playable audio track from your prompt.  
-4. **Response** → The app returns an **audio URL** you can play instantly in the browser.  
+- **Frontend (Vercel)** → User inputs (genre, mood, etc.)
+- **Backend (Render)** → FastAPI + Replicate generates music
+- Returns playable audio file
 
----
+## 🔧 Setup
+1. Clone this repo.
+2. Add your Replicate API key in Render Environment:
+   - Key: `REPLICATE_API_TOKEN`
+   - Value: `r8_XXXXXXXXXXXXXXXXXXXXXXXX`
+3. Deploy backend on **Render**.
+4. Deploy frontend (your `/frontend` folder) on **Vercel**.
+5. Update `script.js` → replace `https://your-backend.onrender.com` with your actual backend URL.
 
-## 🔧 Setup & Deployment
+## ⚡ Example Prompt
+A cinematic anthem fused with deep atmospheric bass, tribal drums, and ethereal synths.
 
-### 1. Clone the repository
-```bash
-git clone https://github.com/your-username/nivaband.git
-cd nivaband
+## 🖥️ Tech Stack
+- **Backend**: FastAPI, Uvicorn, Replicate
+- **Frontend**: Vercel (static hosting)
