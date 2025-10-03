@@ -1,4 +1,4 @@
-gradio==4.36.1
-replicate==0.22.0
-gunicorn==21.2.0
-flask==3.0.2
+fastapi
+uvicorn
+gradio
+replicate
