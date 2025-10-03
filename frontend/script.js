@@ -1,19 +1,51 @@
-document.getElementById("musicForm").addEventListener("submit", async (e) => {
+const form = document.getElementById("musicForm");
+const loading = document.getElementById("loading");
+const result = document.getElementById("result");
+const audioPlayer = document.getElementById("audioPlayer");
+
+// Backend API (Render)
+const API_URL = "https://nivaband.onrender.com/generate";
+
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const genre = document.getElementById("genre").value;
-  const mood = document.getElementById("mood").value;
-  const instruments = document.getElementById("instruments").value;
-  const bpm = document.getElementById("bpm").value;
-  const duration = document.getElementById("duration").value;
-  const extra_notes = document.getElementById("extra_notes").value;
+  const data = {
+    genre: document.getElementById("genre").value,
+    mood: document.getElementById("mood").value,
+    instruments: document.getElementById("instruments").value,
+    bpm: parseInt(document.getElementById("bpm").value),
+    duration: parseInt(document.getElementById("duration").value),
+    extra_notes: document.getElementById("extra_notes").value
+  };
 
-  const response = await fetch("https://nivaband.onrender.com/generate", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ genre, mood, instruments, bpm, duration, extra_notes })
-  });
+  loading.classList.remove("hidden");
+  result.classList.add("hidden");
 
-  const data = await response.json();
-  document.getElementById("outputAudio").src = data.audio_url;
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+
+    const resultData = await response.json();
+
+    if (resultData.audio_url) {
+      audioPlayer.src = resultData.audio_url;
+      result.classList.remove("hidden");
+    } else {
+      alert("No audio was generated.");
+    }
+  } catch (err) {
+    alert("Failed to generate music. Check API or token.");
+    console.error(err);
+  } finally {
+    loading.classList.add("hidden");
+  }
 });
