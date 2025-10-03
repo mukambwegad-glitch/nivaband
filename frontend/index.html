@@ -1,24 +1,16 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>NivaBand — AI Music Composer</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <h1>🎧 NivaBand — AI Music Composer</h1>
-  <p>Type your idea and let AI make music.</p>
-
-  <input id="promptInput" placeholder="Your Music Idea...">
-  
-  <select id="durationSelect">
-    <option value="15">15 sec</option>
-    <option value="30">30 sec</option>
-  </select>
-
-  <button id="generateBtn">Generate 🎶</button>
-
-  <audio id="outputTrack" controls style="display:none;"></audio>
-
-  <script src="script.js"></script>
-</body>
-</html>
+nivaband/
+│
+├── app.py               # Main backend (Gradio + Replicate)
+├── requirements.txt     # Python dependencies
+├── theme.css            # Custom Gradio styling
+├── README.md            # Project description
+├── LICENSE              # MIT License
+├── .gitignore           # Ignore unnecessary files
+│
+├── assets/              # Images, previews, logos
+│   └── niva8-preview.png
+│
+└── frontend/            # Optional custom website
+    ├── index.html
+    ├── style.css
+    └── script.js
