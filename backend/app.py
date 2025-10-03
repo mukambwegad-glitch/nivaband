@@ -2,12 +2,11 @@ from fastapi import FastAPI, Form
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import replicate
-import os
 from utils import build_prompt
 
 app = FastAPI()
 
-# Allow frontend (Vercel) to connect
+# Allow frontend to connect (adjust allow_origins if needed)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  
@@ -16,12 +15,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ✅ Root route to confirm backend is live
 @app.get("/")
 def read_root():
     return {"message": "NivaBand backend is live!"}
 
-# ✅ Generate music route
 @app.post("/generate")
 async def generate_music(
     genre: str = Form(...),
@@ -32,14 +29,10 @@ async def generate_music(
     notes: str = Form("")
 ):
     prompt = build_prompt(genre, mood, instruments, bpm, duration, notes)
-    
+
     output = replicate.run(
         "riffusion/riffusion:latest",
         input={"prompt_a": prompt}
     )
 
     return {"url": output[0]}
-
-# ✅ Local development (Render will ignore this)
-if __name__ == "__main__":
-    uvicorn.run("app:app", host="0.0.0.0", port=8000)
