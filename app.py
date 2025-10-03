@@ -1,14 +1,30 @@
 import os
-import gradio as gr
 import replicate
+import gradio as gr
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
 
-# Load API token from environment
-REPLICATE_API_TOKEN = os.getenv("REPLICATE_API_TOKEN")
+# Load Replicate API token
+os.environ["REPLICATE_API_TOKEN"] = os.getenv("REPLICATE_API_TOKEN")
 
-def generate_music(genre, mood, instruments, bpm, duration):
-    # Build a smarter prompt
-    prompt = f"{genre} music, {mood}, featuring {instruments}, {bpm} BPM"
-    
+# FastAPI app
+app = FastAPI()
+
+# Allow frontend requests
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Later replace "*" with your Vercel domain
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Music generator
+def generate_music(genre, mood, instruments, bpm, duration, extra_notes=""):
+    prompt = f"{genre} music, {mood} mood, with {instruments}, {bpm} BPM. {extra_notes}"
+    print(f"🎵 Final Prompt: {prompt}")
+
     output = replicate.run(
         "facebook/musicgen:latest",
         input={
@@ -18,22 +34,40 @@ def generate_music(genre, mood, instruments, bpm, duration):
     )
     return output
 
-with gr.Blocks(css="theme.css") as demo:
-    gr.Markdown("# 🎵 NivaBand — AI Music Composer")
+# REST API endpoint
+@app.post("/generate")
+async def generate_api(data: dict):
+    genre = data.get("genre", "Electronic")
+    mood = data.get("mood", "Energetic")
+    instruments = data.get("instruments", "synths and drums")
+    bpm = data.get("bpm", 120)
+    duration = data.get("duration", 15)
+    extra_notes = data.get("extra_notes", "")
 
-    genre = gr.Textbox(label="Genre", placeholder="Rock, Jazz, EDM...")
-    mood = gr.Textbox(label="Mood/Emotion", placeholder="Energetic, Calm...")
-    instruments = gr.Textbox(label="Instruments", placeholder="Guitar, Drums, Synth...")
-    bpm = gr.Slider(60, 180, value=120, label="Tempo (BPM)")
-    duration = gr.Radio([5, 15, 30], value=15, label="Duration (seconds)")
+    audio_url = generate_music(genre, mood, instruments, bpm, duration, extra_notes)
+    return {"audio_url": audio_url}
 
-    generate_btn = gr.Button("🎶 Generate Music")
-    output_audio = gr.Audio(label="Output Track")
+# Gradio (for testing/debugging)
+def gradio_ui(genre, mood, instruments, bpm, duration, extra_notes):
+    return generate_music(genre, mood, instruments, bpm, duration, extra_notes)
 
-    def process(genre, mood, instruments, bpm, duration):
-        return generate_music(genre, mood, instruments, bpm, duration)
+demo = gr.Interface(
+    fn=gradio_ui,
+    inputs=[
+        gr.Dropdown(["Electronic", "Hip hop", "Jazz", "Rock"], label="Genre"),
+        gr.Dropdown(["Energetic", "Peaceful", "Mysterious", "Happy"], label="Mood"),
+        gr.Textbox(label="Instruments (e.g. guitar, piano, synth)"),
+        gr.Slider(60, 180, value=120, step=5, label="BPM"),
+        gr.Radio([5, 15, 30], value=15, label="Duration (seconds)"),
+        gr.Textbox(label="Extra Notes (optional)")
+    ],
+    outputs="audio",
+    title="🎵 NivaBand AI Composer"
+)
 
-    generate_btn.click(process, inputs=[genre, mood, instruments, bpm, duration], outputs=output_audio)
+# Mount Gradio into FastAPI
+app = gr.mount_gradio_app(app, demo, path="/")
 
-# ✅ Needed for Render (gunicorn looks for 'app')
-app = demo
+# Local run
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
