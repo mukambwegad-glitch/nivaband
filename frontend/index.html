@@ -2,38 +2,50 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NivaBand — AI Music Composer</title>
+  <title>NivaBand — AI Composer</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>🎵 NivaBand — AI Music Composer</h1>
-
-    <label>Genre</label>
-    <input type="text" id="genre" placeholder="Rock, EDM, Jazz...">
-
-    <label>Mood / Emotion</label>
-    <input type="text" id="mood" placeholder="Energetic, Peaceful...">
-
-    <label>Instruments</label>
-    <input type="text" id="instruments" placeholder="Guitar, Synth, Drums...">
-
-    <label>Tempo (BPM)</label>
-    <input type="number" id="bpm" value="120" min="60" max="180">
-
-    <label>Duration</label>
-    <select id="duration">
-      <option value="5">5 sec</option>
-      <option value="15" selected>15 sec</option>
-      <option value="30">30 sec</option>
+  <h1>🎵 NivaBand — AI Music Composer</h1>
+  <form id="musicForm">
+    <label>Genre:</label>
+    <select id="genre">
+      <option>Electronic</option>
+      <option>Hip hop</option>
+      <option>Jazz</option>
+      <option>Rock</option>
     </select>
 
-    <button onclick="generateMusic()">🎶 Generate</button>
+    <label>Mood:</label>
+    <select id="mood">
+      <option>Energetic</option>
+      <option>Peaceful</option>
+      <option>Mysterious</option>
+      <option>Happy</option>
+    </select>
 
-    <h2>Output</h2>
-    <audio id="output" controls></audio>
-  </div>
+    <label>Instruments:</label>
+    <input type="text" id="instruments" placeholder="guitar, piano, synth">
+
+    <label>BPM:</label>
+    <input type="number" id="bpm" value="120" min="60" max="200">
+
+    <label>Duration (sec):</label>
+    <select id="duration">
+      <option value="5">5</option>
+      <option value="15" selected>15</option>
+      <option value="30">30</option>
+    </select>
+
+    <label>Extra Notes:</label>
+    <textarea id="extra_notes" placeholder="chords, emotions, details..."></textarea>
+
+    <button type="submit">Generate 🎶</button>
+  </form>
+
+  <h2>Output:</h2>
+  <audio id="outputAudio" controls></audio>
+
   <script src="script.js"></script>
 </body>
 </html>
