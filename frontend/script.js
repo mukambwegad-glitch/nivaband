@@ -1,26 +1,21 @@
-document.getElementById("generateBtn").addEventListener("click", async () => {
-    const prompt = document.getElementById("promptInput").value;
-    const duration = document.getElementById("durationSelect").value;
+async function generateMusic() {
+  const genre = document.getElementById("genre").value;
+  const mood = document.getElementById("mood").value;
+  const instruments = document.getElementById("instruments").value;
+  const bpm = document.getElementById("bpm").value;
+  const duration = document.getElementById("duration").value;
 
-    const response = await fetch("https://nivaband.onrender.com/predict", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            prompt: prompt,
-            duration: parseInt(duration)
-        })
-    });
+  const response = await fetch("https://nivaband.onrender.com", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ genre, mood, instruments, bpm, duration })
+  });
 
-    const result = await response.json();
+  const data = await response.json();
 
-    if (result.status === "success") {
-        const audioPlayer = document.getElementById("outputTrack");
-        audioPlayer.src = result.audio_url;
-        audioPlayer.style.display = "block";
-        audioPlayer.play();
-    } else {
-        alert("Error: " + result.message);
-    }
-});
+  if (data && data[0]) {
+    document.getElementById("output").src = data[0];
+  } else {
+    alert("Error: No music generated.");
+  }
+}
