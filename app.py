@@ -2,40 +2,46 @@ import gradio as gr
 import replicate
 import os
 
-# Make sure you set your Replicate API key in environment
-# export REPLICATE_API_TOKEN="your-token-here"
-# On Render: add it in the Environment Variables panel
+# Load Replicate API token
+REPLICATE_API_TOKEN = os.environ.get("REPLICATE_API_TOKEN")
+if not REPLICATE_API_TOKEN:
+    raise ValueError("⚠️ Missing REPLICATE_API_TOKEN in environment variables!")
 
-def generate_music(prompt, duration, vibe, instrument, tempo):
-    # Smart enriched prompt
-    final_prompt = f"{prompt}, style: {vibe}, instrument: {instrument}, tempo: {tempo} BPM"
-    
-    # Call replicate API (MusicGen)
+# Generate music
+def generate_music(prompt, duration):
     output = replicate.run(
         "facebook/musicgen:latest",
         input={
-            "prompt": final_prompt,
+            "prompt": prompt,
             "duration": duration
         }
     )
-    return output, final_prompt
+    return output[0] if isinstance(output, list) else output
 
-with gr.Blocks(css="theme.css", title="NivaBand") as app:
-    gr.Markdown("# 🎧 NivaBand — AI Music Composer\nCraft music with prompts, vibes, instruments, and tempo.")
+# UI
+with gr.Blocks(theme="gradio/soft") as demo:
+    gr.Markdown("## 🎧 NivaBand — Pro Mode")
+    gr.Markdown("Write detailed prompts. More detail = better music.")
 
     with gr.Row():
-        with gr.Column():
-            prompt = gr.Textbox(label="📝 Your Music Idea")
-            vibe = gr.Radio(["Cinematic","Lo-Fi","Energetic","Peaceful","Mysterious"], value="Cinematic")
-            instrument = gr.Dropdown(["Piano","Guitar","Synth","Drums","Strings"], value="Synth")
-            tempo = gr.Slider(60,160,90,step=5,label="Tempo BPM")
-            duration = gr.Radio([5,15,30], value=15, label="Duration (sec)")
-            btn = gr.Button("🎶 Generate")
+        prompt = gr.Textbox(
+            label="Your Music Idea",
+            placeholder="Example: Afrobeat groove with jazzy piano, soulful horns, and electronic drums, uplifting vibe, 120 BPM",
+            lines=5
+        )
+        duration = gr.Slider(
+            label="Duration (seconds)",
+            minimum=5,
+            maximum=300,
+            value=60,
+            step=5
+        )
 
-        with gr.Column():
-            audio = gr.Audio(label="🔊 Output Track")
-            final = gr.Textbox(label="🔍 Final Prompt", interactive=False)
+    btn = gr.Button("🎶 Generate Music", variant="primary")
+    output_audio = gr.Audio(label="Generated Track", type="filepath")
+    final_prompt = gr.Textbox(label="🔍 Final Prompt Used")
 
-    btn.click(fn=generate_music, inputs=[prompt,duration,vibe,instrument,tempo], outputs=[audio,final])
+    btn.click(fn=generate_music, inputs=[prompt, duration], outputs=[output_audio])
+    btn.click(fn=lambda p: p, inputs=[prompt], outputs=[final_prompt])
 
-app.launch(server_name="0.0.0.0", server_port=7860)
+demo.launch(server_name="0.0.0.0", server_port=7860)
