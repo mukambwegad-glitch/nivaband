@@ -1,47 +1,32 @@
-import gradio as gr
+from flask import Flask, request, jsonify
 import replicate
 import os
 
-# Load Replicate API token
-REPLICATE_API_TOKEN = os.environ.get("REPLICATE_API_TOKEN")
-if not REPLICATE_API_TOKEN:
-    raise ValueError("⚠️ Missing REPLICATE_API_TOKEN in environment variables!")
+app = Flask(__name__)
 
-# Generate music
-def generate_music(prompt, duration):
-    output = replicate.run(
-        "facebook/musicgen:latest",
-        input={
-            "prompt": prompt,
-            "duration": duration
-        }
-    )
-    return output[0] if isinstance(output, list) else output
+# Load your Replicate token from environment
+REPLICATE_API_TOKEN = os.getenv("REPLICATE_API_TOKEN")
 
-# UI
-with gr.Blocks(theme="gradio/soft") as demo:
-    gr.Markdown("## 🎧 NivaBand — Pro Mode")
-    gr.Markdown("Write detailed prompts. More detail = better music.")
+@app.route("/predict", methods=["POST"])
+def predict():
+    try:
+        data = request.get_json()
 
-    with gr.Row():
-        prompt = gr.Textbox(
-            label="Your Music Idea",
-            placeholder="Example: Afrobeat groove with jazzy piano, soulful horns, and electronic drums, uplifting vibe, 120 BPM",
-            lines=5
-        )
-        duration = gr.Slider(
-            label="Duration (seconds)",
-            minimum=5,
-            maximum=300,
-            value=60,
-            step=5
+        prompt = data.get("prompt", "")
+        duration = data.get("duration", 15)   # default 15s
+        model = "facebook/musicgen:latest"
+
+        output = replicate.run(
+            model,
+            input={
+                "prompt": prompt,
+                "duration": duration
+            }
         )
 
-    btn = gr.Button("🎶 Generate Music", variant="primary")
-    output_audio = gr.Audio(label="Generated Track", type="filepath")
-    final_prompt = gr.Textbox(label="🔍 Final Prompt Used")
+        return jsonify({"status": "success", "audio_url": output})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
 
-    btn.click(fn=generate_music, inputs=[prompt, duration], outputs=[output_audio])
-    btn.click(fn=lambda p: p, inputs=[prompt], outputs=[final_prompt])
-
-demo.launch(server_name="0.0.0.0", server_port=7860)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=7860)
