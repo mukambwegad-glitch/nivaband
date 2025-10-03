@@ -1,56 +1,71 @@
-from fastapi import FastAPI, Form
-from fastapi.responses import FileResponse
+import gradio as gr
 from transformers import MusicgenForConditionalGeneration, AutoProcessor
 import scipy.io.wavfile
-import torch
 import uuid
-import os
 
-from music_parser import parse_chords
+# Load model (small = faster, medium/large = better quality but heavier)
+model = MusicgenForConditionalGeneration.from_pretrained("facebook/musicgen-small")
+processor = AutoProcessor.from_pretrained("facebook/musicgen-small")
 
-app = FastAPI(title="NivaBand API")
+# Map duration to token length
+duration_map = {
+    "Short (5s)": 256,
+    "Medium (15s)": 768,
+    "Long (30s)": 1536
+}
 
-# Load MusicGen model
-model = MusicgenForConditionalGeneration.from_pretrained("facebook/musicgen-melody")
-processor = AutoProcessor.from_pretrained("facebook/musicgen-melody")
-
-@app.post("/generate")
-async def generate_music(
-    prompt: str = Form(...),
-    chords: str = Form(None),
-    duration: int = Form(15)
-):
-    # Map duration → tokens
-    duration_map = {5: 256, 15: 768, 30: 1536, 60: 3072}
-    tokens = duration_map.get(duration, 768)
-
-    # Parse chord guide
-    chord_text = ""
+# Optional Smart Enhancer
+def smarten_prompt(raw_prompt, vibe, instrument, tempo, chords):
+    base = f"{raw_prompt.strip()}, in a {vibe} style with {instrument}, tempo: {tempo} BPM"
     if chords:
-        chord_text = parse_chords(chords)
+        base += f", guided by chords: {chords}"
+    return base
 
-    # Final prompt
-    final_prompt = f"{prompt} {chord_text}".strip()
+# Generate music
+def generate_music(prompt, duration_label, vibe, instrument, tempo, chords):
+    tokens = duration_map[duration_label]
+    final_prompt = smarten_prompt(prompt, vibe, instrument, tempo, chords)
 
-    # Generate
     inputs = processor(text=[final_prompt], return_tensors="pt")
     audio_values = model.generate(
-        **inputs, 
-        do_sample=True, 
-        guidance_scale=3, 
+        **inputs,
+        do_sample=True,
+        guidance_scale=3,
         max_new_tokens=tokens
     )
 
-    # Save output
     sr = model.config.audio_encoder.sampling_rate
-    filename = f"{uuid.uuid4().hex}.wav"
-    filepath = os.path.join("outputs", filename)
-    os.makedirs("outputs", exist_ok=True)
-    scipy.io.wavfile.write(filepath, sr, audio_values[0, 0].numpy())
+    file_path = f"/tmp/{uuid.uuid4().hex}.wav"
+    scipy.io.wavfile.write(file_path, sr, audio_values[0, 0].numpy())
+    return file_path, final_prompt
 
-    return {"file": f"/download/{filename}", "prompt_used": final_prompt}
+# Gradio UI
+with gr.Blocks(title="NivaBand: AI Music Composer") as app:
+    gr.HTML("<link rel='stylesheet' href='theme.css'>")
 
-@app.get("/download/{filename}")
-async def download_file(filename: str):
-    filepath = os.path.join("outputs", filename)
-    return FileResponse(filepath, media_type="audio/wav")
+    gr.Markdown("""
+    # 🎧 NivaBand — AI Music Composer  
+    _Generate high-quality music from your ideas. Style it. Control it. Share it._
+    """)
+
+    with gr.Row():
+        with gr.Column():
+            prompt = gr.Textbox(label="📝 Describe your music idea", placeholder="e.g., Triumphant anthem with deep bass and strings...")
+            vibe = gr.Radio(["Cinematic", "Lo-Fi", "Energetic", "Peaceful", "Mysterious"], label="🎨 Vibe", value="Cinematic")
+            instrument = gr.Dropdown(["Piano", "Guitar", "Synth", "Strings", "Drums", "Ambient Pads"], label="🎸 Instrument", value="Synth")
+            tempo = gr.Slider(60, 160, step=5, value=100, label="🎼 Tempo (BPM)")
+            chords = gr.Textbox(label="🎵 Chords (Optional)", placeholder="Cmaj7, G, Am, F")
+            duration = gr.Radio(list(duration_map.keys()), label="⏱️ Duration", value="Short (5s)")
+            submit_btn = gr.Button("🎶 Generate Music")
+
+        with gr.Column():
+            output_audio = gr.Audio(label="🔊 Your Generated Track", type="filepath")
+            display_prompt = gr.Textbox(label="🔍 Final Prompt Sent to Model", interactive=False)
+
+    submit_btn.click(
+        fn=generate_music,
+        inputs=[prompt, duration, vibe, instrument, tempo, chords],
+        outputs=[output_audio, display_prompt]
+    )
+
+app.launch()
