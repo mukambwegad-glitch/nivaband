@@ -1,38 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NivaBand — AI Music Composer</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>🎧 NivaBand</h1>
-    <p class="subtitle">AI Music Generator with Chord Intelligence</p>
+  <h1>🎧 NivaBand — AI Music Composer</h1>
+  <p>Type your idea and let AI make music.</p>
 
-    <!-- Prompt Input -->
-    <textarea id="prompt" placeholder="Describe your music idea here..."></textarea>
+  <input id="promptInput" placeholder="Your Music Idea...">
+  
+  <select id="durationSelect">
+    <option value="15">15 sec</option>
+    <option value="30">30 sec</option>
+  </select>
 
-    <!-- Duration -->
-    <label for="duration">Duration (seconds):</label>
-    <input type="number" id="duration" min="5" max="300" value="60" />
+  <button id="generateBtn">Generate 🎶</button>
 
-    <!-- Generate Button -->
-    <button id="generate">🎶 Generate Music</button>
+  <audio id="outputTrack" controls style="display:none;"></audio>
 
-    <!-- Output -->
-    <div class="output">
-      <h2>Output Track</h2>
-      <audio id="output-audio" controls></audio>
-    </div>
-
-    <!-- Final Prompt -->
-    <div class="prompt-box">
-      <h3>🔍 Final Prompt</h3>
-      <p id="final-prompt"></p>
-    </div>
-  </div>
   <script src="script.js"></script>
 </body>
 </html>
